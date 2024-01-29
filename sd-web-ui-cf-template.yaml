@@ -20,8 +20,8 @@ Resources:
     Type: AWS::EC2::Instance
     Properties:
       InstanceType: g4dn.xlarge
-      # Amazon Linux 2023 AMI
-      ImageId: ami-0b8ab97f0e159452c
+      # Deep Learning Base OSS Nvidia Driver GPU AMI (Ubuntu 20.04) 20240122
+      ImageId: ami-051ea81f1d1f4e9f4
       BlockDeviceMappings:
         - DeviceName: /dev/sda1
           Ebs:
