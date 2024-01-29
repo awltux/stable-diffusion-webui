@@ -21,7 +21,7 @@ Resources:
     Properties:
       InstanceType: g4dn.xlarge
       # Amazon Linux 2023 AMI
-      ImageId: ami-09d6bbc1af02c2ca1
+      ImageId: ami-0b8ab97f0e159452c
       BlockDeviceMappings:
         - DeviceName: /dev/sda1
           Ebs:
