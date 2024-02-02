@@ -1,8 +1,7 @@
 # Cuda installer
+
 CUDA_COMPILATION_TOOLS_VERSION=12.1.105
 CUDA_DRIVER_VERSION=535.104.12
-STABLE_DIFFUSION_MODEL_VERSION=2-1
-STABLE_DIFFUSION_IMAGE_SIZE=512
 
 # Python 3.8 causes webui.sh to fail with this error:
 # https://github.com/AUTOMATIC1111/stable-diffusion-webui/issues/13054
@@ -30,28 +29,135 @@ curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.s
 sudo apt-get install git-lfs
 sudo -u ubuntu git lfs install --skip-smudge
 
-# download the SD model and move it to the SD model directory
-STABLE_DIFFUSION_CHECK_POINT_PROJECT=stable-diffusion-${STABLE_DIFFUSION_MODEL_VERSION}-base
-STABLE_DIFFUSION_BASE_FILENAME=v${STABLE_DIFFUSION_MODEL_VERSION}_${STABLE_DIFFUSION_IMAGE_SIZE}-ema-pruned
-STABLE_DIFFUSION_CHECK_POINT_FILENAME=${STABLE_DIFFUSION_BASE_FILENAME}.ckpt
-STABLE_DIFFUSION_YAML_FILENAME=${STABLE_DIFFUSION_BASE_FILENAME}.yaml
+sdxl_base_url=https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0/resolve/main/sd_xl_base_1.0.safetensors
+sdxl_base_path=stable-diffusion-webui/models/Stable-diffusion/SDXL-Base.safetensors
+if [ ! -f ${sdxl_base_path} ]; then
+    echo "Downloading: SDXL-Base Checkpoint"
+    curl -L -o ${sdxl_base_path} \
+        ${sdxl_base_url}
+fi
 
-sudo -u ubuntu git clone --depth 1 https://huggingface.co/stabilityai/${STABLE_DIFFUSION_CHECK_POINT_PROJECT}
-cd ${STABLE_DIFFUSION_CHECK_POINT_PROJECT}/
-sudo -u ubuntu git lfs pull --include "${STABLE_DIFFUSION_CHECK_POINT_FILENAME}"
-sudo -u ubuntu git lfs install --force
-cd ..
-mv ${STABLE_DIFFUSION_CHECK_POINT_PROJECT}/${STABLE_DIFFUSION_CHECK_POINT_FILENAME} stable-diffusion-webui/models/Stable-diffusion/
-rm -rf ${STABLE_DIFFUSION_CHECK_POINT_PROJECT}/
 
-# download the corresponding config file and move it also to the model directory (make sure the name matches the model name)
-wget https://raw.githubusercontent.com/Stability-AI/stablediffusion/main/configs/stable-diffusion/v2-inference.yaml
-cp v2-inference.yaml stable-diffusion-webui/models/Stable-diffusion/${STABLE_DIFFUSION_YAML_FILENAME}
+sdxl_turbo_url=https://huggingface.co/stabilityai/sdxl-turbo/resolve/main/sd_xl_turbo_1.0_fp16.safetensors
+sdxl_turbo_path=stable-diffusion-webui/models/Stable-diffusion/SDXL-Turbo.safetensors
+if [ ! -f ${sdxl_turbo_path} ]; then
+    echo "Downloading: SDXL-Turbo Checkpoint"
+    curl -L -o ${sdxl_turbo_path} \
+        ${sdxl_turbo_url}
+fi
+
+
+sdxl_refiner_url=https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0/resolve/main/sd_xl_base_1.0.safetensors
+sdxl_refiner_path=stable-diffusion-webui/models/Stable-diffusion/SDXL-Refiner.safetensors
+if [ ! -f ${sdxl_refiner_path} ]; then
+    echo "Downloading: SDXL-Refiner Checkpoint"
+    curl -L -o ${sdxl_refiner_path} \
+        ${sdxl_refiner_url}
+fi
+
+
+sdxl_vae_url=https://huggingface.co/stabilityai/sdxl-vae/resolve/main/sdxl_vae.safetensors
+sdxl_vae_path=stable-diffusion-webui/models/VAE/SDXL_vae.safetensors
+if [ ! -f ${sdxl_vae_path} ]; then
+    echo "Downloading: SDXL VAE"
+    curl -L -o ${sdxl_vae_path} \
+        ${sdxl_vae_url}
+fi
+
+# SDFX Lora
+mkdir stable-diffusion-webui/models/Lora
+
+sdxl_lora_url=https://civitai.com/api/download/models/177999?type=Model&format=SafeTensor
+sdxl_lora_path=stable-diffusion-webui/models/Lora/SDXL_Ink_Stains.safetensors
+if [ ! -f ${sdxl_lora_path} ]; then
+    echo "Downloading Lora: SDXL_Ink_Stains"
+    curl -L -o "${sdxl_lora_path}" \
+        ${sdxl_lora_url}
+fi
+
+sdxl_lora_url=https://civitai.com/api/download/models/180951?type=Model&format=SafeTensor
+sdxl_lora_path=stable-diffusion-webui/models/Lora/SDXL_Ink_Splashing.safetensors
+if [ ! -f ${sdxl_lora_path} ]; then
+    echo "Downloading Lora: SDXL_Ink_Splashing"
+    curl -L -o ${sdxl_lora_path} \
+        ${sdxl_lora_url}
+fi
+
+sdxl_lora_url=https://civitai.com/api/download/models/215816?type=Model&format=SafeTensor
+sdxl_lora_path=stable-diffusion-webui/models/Lora/SDXL_Sketch_For_Art_Examination.safetensors
+if [ ! -f ${sdxl_lora_path} ]; then
+    echo "Downloading Lora: SDXL_Sketch_For_Art_Examination"
+    curl -L -o ${sdxl_lora_path} \
+        ${sdxl_lora_url}
+fi
+
+sdxl_lora_url=https://civitai.com/api/download/models/196618?type=Model&format=SafeTensor
+sdxl_lora_path=stable-diffusion-webui/models/Lora/SDXL_Cream_Style_Rooms.safetensors
+if [ ! -f ${sdxl_lora_path} ]; then
+    echo "Downloading Lora: SDXL_Cream_Style_Rooms"
+    curl -L -o ${sdxl_lora_path} \
+        ${sdxl_lora_url}
+fi
+
+
+sdxl_lora_url=https://civitai.com/api/download/models/203327?type=Model&format=SafeTensor
+sdxl_lora_path=stable-diffusion-webui/models/Lora/SDXL_DiTerlizziArtAI.safetensors
+if [ ! -f ${sdxl_lora_path} ]; then
+    echo "Downloading Lora: SDXL_DiTerlizziArtAI"
+    curl -L -o ${sdxl_lora_path} \
+        ${sdxl_lora_url}
+fi
+
+
+sdxl_lora_url=https://civitai.com/api/download/models/155511?type=Model&format=SafeTensor
+sdxl_lora_path=stable-diffusion-webui/models/Lora/SDXL_Paint_Splash_Style.safetensors
+if [ ! -f ${sdxl_lora_path} ]; then
+    echo "Downloading Lora: SDXL_Paint_Splash_Style"
+    curl -L -o ${sdxl_lora_path} \
+        ${sdxl_lora_url}
+fi
+
+
+sdxl_lora_url=https://civitai.com/api/download/models/128212
+sdxl_lora_path=stable-diffusion-webui/models/Lora/SDXL_Oil_Painting.safetensors
+if [ ! -f ${sdxl_lora_path} ]; then
+    echo "Downloading Lora: SDXL_Oil_Painting"
+    curl -L -o ${sdxl_lora_path} \
+        ${sdxl_lora_url}
+fi
+
+
+sdxl_lora_url=https://civitai.com/api/download/models/227662?type=Model&format=SafeTensor
+sdxl_lora_path=stable-diffusion-webui/models/Lora/SDXL_Oil_And_Watercolor_Painting.safetensors
+if [ ! -f ${sdxl_lora_path} ]; then
+    echo "Downloading Lora: SDXL_Oil_And_Watercolor_Painting"
+    curl -L -o ${sdxl_lora_path} \
+        ${sdxl_lora_url}
+fi
+
+sdxl_lora_url=https://civitai.com/api/download/models/285484?type=Model&format=SafeTensor
+sdxl_lora_path=stable-diffusion-webui/models/Lora/SDXL_Pomological_Watercolor_Redmond.safetensors
+if [ ! -f ${sdxl_lora_path} ]; then
+    echo "Downloading Lora: SDXL_Pomological_Watercolor_Redmond"
+    curl -L -o ${sdxl_lora_path} \
+        ${sdxl_lora_url}
+fi
+
+sdxl_lora_url=https://civitai.com/api/download/models/270405?type=Model&format=SafeTensor
+sdxl_lora_path=stable-diffusion-webui/models/Lora/SDXL_Echoes_Of_The_Verdant_Twilight.safetensors
+if [ ! -f ${sdxl_lora_path} ]; then
+    echo "Downloading Lora: SDXL_Echoes_Of_The_Verdant_Twilight"
+    curl -L -o ${sdxl_lora_path} \
+        ${sdxl_lora_url}
+fi
+
+# Force python3.9
+sed -i 's/#python_cmd=.*/python_cmd="python3.9"/' stable-diffusion-webui/webui-user.sh 
 
 # change ownership of the web UI so that a regular user can start the server
 sudo chown -R ubuntu:ubuntu stable-diffusion-webui/
 
 # start the server as user 'ubuntu'
 echo "Starting stable diffusion web-UI"
-sudo -u ubuntu --preserve-env=python_cmd nohup bash stable-diffusion-webui/webui.sh --listen | tee log.txt
+sudo -u ubuntu --preserve-env=python_cmd nohup bash stable-diffusion-webui/webui.sh | tee log.txt
 
