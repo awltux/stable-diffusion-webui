@@ -12,16 +12,12 @@ Resources:
           FromPort: 22
           ToPort: 22
           CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: 7860
-          ToPort: 7860
-          CidrIp: 0.0.0.0/0
   EC2Instance:
     Type: AWS::EC2::Instance
     Properties:
       InstanceType: g4dn.xlarge
-      # Deep Learning Base OSS Nvidia Driver GPU AMI (Ubuntu 20.04) 20240122 [London]
-      ImageId: ami-0b8ab97f0e159452c
+      # Deep Learning Base OSS Nvidia Driver GPU AMI (Ubuntu 20.04) 20240201 [London]
+      ImageId: ami-00a2de05477cf8389
       BlockDeviceMappings:
         - DeviceName: /dev/sda1
           Ebs:
@@ -36,12 +32,6 @@ Resources:
         'Fn::Base64': |
             #!/bin/bash
             cd /home/ubuntu
-            git clone https://github.com/awltux/stable-diffusion-webui.git
-            bash stable-diffusion-webui/setup.sh -y
-  MyEIP:
-    Type: AWS::EC2::EIP
-  MyEIPAssociation:
-    Type: AWS::EC2::EIPAssociation
-    Properties:
-      AllocationId: !GetAtt MyEIP.AllocationId
-      InstanceId: !Ref EC2Instance
+#            git clone https://github.com/awltux/stable-diffusion-webui.git
+#            bash stable-diffusion-webui/setup.sh -y
+  
