@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+set -e # Always stop on error
+set -u # Always stop if variable undefined
+
 #################################################
 # Please do not make any changes to this file,  #
 # change the variables in webui-user.sh instead #

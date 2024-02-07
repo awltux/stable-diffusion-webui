@@ -1,5 +1,8 @@
-# Cuda installer
+#!/bin/bash
+set -e # Always stop on error
+set -u # Always stop if variable undefined
 
+# Cuda installer
 CUDA_COMPILATION_TOOLS_VERSION=12.1.105
 CUDA_DRIVER_VERSION=535.104.12
 
@@ -65,7 +68,7 @@ if [ ! -f ${sdxl_vae_path} ]; then
 fi
 
 # SDFX Lora
-mkdir stable-diffusion-webui/models/Lora
+mkdir -p stable-diffusion-webui/models/Lora
 
 sdxl_lora_url=https://civitai.com/api/download/models/177999?type=Model&format=SafeTensor
 sdxl_lora_path=stable-diffusion-webui/models/Lora/SDXL_Ink_Stains.safetensors
@@ -152,12 +155,12 @@ if [ ! -f ${sdxl_lora_path} ]; then
 fi
 
 # Force python3.9
-sed -i 's/#python_cmd=.*/python_cmd="python3.9"/' stable-diffusion-webui/webui-user.sh 
+sed -i "s/#python_cmd=.*/python_cmd=\"${python_cmd}\"/" stable-diffusion-webui/webui-user.sh 
 
 # change ownership of the web UI so that a regular user can start the server
 sudo chown -R ubuntu:ubuntu stable-diffusion-webui/
 
 # start the server as user 'ubuntu'
 echo "Starting stable diffusion web-UI"
-sudo -u ubuntu --preserve-env=python_cmd nohup bash stable-diffusion-webui/webui.sh | tee log.txt
+sudo -u ubuntu nohup bash stable-diffusion-webui/webui.sh | tee log.txt
 

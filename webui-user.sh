@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e # Always stop on error
+set -u # Always stop if variable undefined
 #########################################################
 # Uncomment and change the variables below to your need:#
 #########################################################
